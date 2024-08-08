@@ -1,31 +1,52 @@
 package org.super89.supermegamod.testnewfeautres;
 
 import org.bukkit.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.super89.supermegamod.testnewfeautres.Utils.ArmorStandUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public final class TestNewFeautres extends JavaPlugin implements Listener {
+public final class TestNewFeautres extends JavaPlugin {
     private boolean isGameStarted = false;
 
-    private final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0,5,0);
+    private final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0,-59,0);
 
     private int count = 0;
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
-    private final Events events =new Events();
+    private final Events events = new Events();
 
 
     @Override
     public void onEnable() {
+        ArmorStandUtils resArmorStand = new ArmorStandUtils(resourceLocation, ChatColor.YELLOW+"Генератор Ресуров");
 
-        Bukkit.getPluginManager().registerEvents(this, this);
+
         Bukkit.getPluginManager().registerEvents(events, this);
+        Objects.requireNonNull(Bukkit.getPluginCommand("game")).setExecutor(new Game(this));
+        List<String> tabgame = Arrays.asList("start", "stop");
+        Objects.requireNonNull(Bukkit.getPluginCommand("game")).setTabCompleter(new TabCompleter() {
+            @Override
+            public @NotNull List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+
+
+                return tabgame;
+            }
+        });
         for(World world : Bukkit.getWorlds()){
 
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
@@ -78,6 +99,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
             @Override
             public void run() {
                 if(isGameStarted){
+                    if(resArmorStand.getArmorStand().getNearbyEntities(1.5, 1.5, 1.5).isEmpty()){
                 World world = Bukkit.getWorld("world");
                 if(count < 4){
                     assert world != null;
@@ -87,15 +109,31 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
                 }
                 if(count == 4){
                     assert world != null;
-                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
                     world.dropItemNaturally(resourceLocation, new ItemStack(Material.GOLD_INGOT));
                     count = 0;
                 }
+
+                }else {
+                        for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1.5, 1.5, 1.5)){
+                            if(entity instanceof Player){
+                                Player player = (Player) entity;
+                                if(count < 4){
+                                    player.getInventory().addItem(new ItemStack(Material.IRON_INGOT));
+                                    count++;
+                                }
+                                if(count == 4){
+                                    player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
+                                    count = 0;
+                                }
+                            }
+                        }
+                    }
+
                 }
 
 
             }
-        }, 40, 40);
+        }, 50, 50);
     }
     @Override
     public void onDisable(){

@@ -1,35 +1,37 @@
 package org.super89.supermegamod.testnewfeautres;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
 import java.util.Objects;
 
 public final class TestNewFeautres extends JavaPlugin implements Listener {
-    NamespacedKey smt = new NamespacedKey(this, "smt");
-    Events events =new Events();
+    private boolean isGameStarted = false;
+
+    private final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0,5,0);
+
+    private int count = 0;
+
+    private final NamespacedKey smt = new NamespacedKey(this, "smt");
+    private final Events events =new Events();
+
 
     @Override
     public void onEnable() {
+
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(events, this);
-        Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        for(World world : Bukkit.getWorlds()){
+
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        }
+
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -40,7 +42,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
                     if (getVar(player) < 100) {
                         setVar(player, getVar(player) + 1);
                     }
-                    player.sendActionBar(String.valueOf(getVar(player)));
+                    player.sendActionBar(ChatColor.AQUA+String.valueOf(getVar(player))+"/100");
                 }
 
             }
@@ -50,17 +52,54 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
             public void run() {
                 for(Player player : events.deathMap.keySet()){
                     if(events.deathMap.get(player) >0){
-                    player.sendTitle(ChatColor.RED+"Осталось: " + ChatColor.YELLOW + events.deathMap.get(player)+" секунд." , ChatColor.BLUE+"Осталось: " + ChatColor.GREEN + events.deathMap.get(player) + " секунд.");
+                    player.sendTitle(ChatColor.YELLOW+"Возрождение через: " + ChatColor.RED + events.deathMap.get(player)+" секунд." , "");
                     events.deathMap.put(player, events.deathMap.get(player)-1);
 
-                }
+
+                    }
                     else {
                         events.deathMap.remove(player);
+                        player.sendTitle(ChatColor.YELLOW + "Вы возрождены!", "");
+                        player.setGameMode(GameMode.ADVENTURE);
+                        if(player.getRespawnLocation() != null) {
+                            player.teleport(player.getRespawnLocation());
+                        }
+                        else {
+                            player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+                        }
                     }
                 }
 
+
+
             }
         }, 20, 20);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if(isGameStarted){
+                World world = Bukkit.getWorld("world");
+                if(count < 4){
+                    assert world != null;
+                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
+
+                    count++;
+                }
+                if(count == 4){
+                    assert world != null;
+                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
+                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.GOLD_INGOT));
+                    count = 0;
+                }
+                }
+
+
+            }
+        }, 40, 40);
+    }
+    @Override
+    public void onDisable(){
+        isGameStarted = false;
     }
 
     public int getVar(Player player) {
@@ -73,28 +112,11 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
         PersistentDataContainer container = player.getPersistentDataContainer();
         container.set(smt, PersistentDataType.INTEGER, a);
     }
-
-    @EventHandler
-    public void join(PlayerJoinEvent E) {
-        if (!E.getPlayer().hasPlayedBefore()) {
-            setVar(E.getPlayer(), 0);
-        }
-
-        Player player = E.getPlayer();
-        PlayerProfile profile = player.getPlayerProfile();
-
-        // Укажи ссылку на свой плащ
-        String capeUrl = "iVBORw0KGgoAAAANSUhEUgAAABYAAAARCAYAAADZsVyDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsEAAA7BAbiRa+0AAACcSURBVDhPY2RgYPgPxFQHTFCa6oAqBotU8UFZCEC0wbIbRKEs4gBZLibGEqqHMSxYcBqsfE0SyoKA76d+QlmYgNOMHcpCAKq7GAZobzB6krmr9RzKIg8QHcbI4HHAaygLE8DCG6fBH5d8hbLIA0SHMXrMIwcdthQDN/hN2ycoCxIMyHxyAM7Iw5b/SQFEBwU+gOw7WLDQqDxmYAAA0DEhgzw/zTMAAAAASUVORK5CYII=";
-
-        // Создаём новое свойство для плаща
-        ProfileProperty capeProperty = new ProfileProperty("cape", capeUrl);
-
-        // Добавляем свойство в профиль игрока
-        profile.setProperties(List.of(new ProfileProperty[]{capeProperty}));
-
-        // Обновляем профиль игрока на сервере
-        player.setPlayerProfile(profile);
-
+    public boolean getisGameStarted(){
+        return isGameStarted;
+    }
+    public void setGameStarted(boolean t){
+        isGameStarted = t;
     }
 
 

@@ -10,16 +10,28 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Commands implements CommandExecutor {
+    private final TestNewFeautres plugin;
+    private boolean isgamestarted;
+
+    public Commands(TestNewFeautres plugin) {
+        this.plugin = plugin;
+        this.isgamestarted = plugin.getisGameStarted();
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(command.getName().equals("data-change")){
+        if(command.getName().equals("game-start")){
         if(!(commandSender instanceof Player)){
             commandSender.sendMessage(ChatColor.RED+"Эту команду могут использовать только игроки!");
             return true;
 
         }
-        Player target = Bukkit.getPlayer(strings[0]);
         Player player = (Player) commandSender;
+        if(!player.isOp()){
+            player.sendMessage(ChatColor.RED+"Эту команду могу использовать только администраторы!");
+            return true;
+        }
+        plugin.setGameStarted(true);
 
 
 

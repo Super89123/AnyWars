@@ -3,9 +3,7 @@ package org.super89.supermegamod.testnewfeautres;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,26 +17,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.profile.PlayerTextures;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.http.WebSocket;
 import java.util.List;
 import java.util.Objects;
 
 public final class TestNewFeautres extends JavaPlugin implements Listener {
     NamespacedKey smt = new NamespacedKey(this, "smt");
+    Events events =new Events();
 
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(events, this);
+        Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -49,8 +40,25 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
                     if (getVar(player) < 100) {
                         setVar(player, getVar(player) + 1);
                     }
-                    player.sendMessage(String.valueOf(getVar(player)));
+                    player.sendActionBar(String.valueOf(getVar(player)));
                 }
+
+            }
+        }, 20, 20);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for(Player player : events.deathMap.keySet()){
+                    if(events.deathMap.get(player) >0){
+                    player.sendTitle(ChatColor.RED+"Осталось: " + ChatColor.YELLOW + events.deathMap.get(player)+" секунд." , ChatColor.BLUE+"Осталось: " + ChatColor.GREEN + events.deathMap.get(player) + " секунд.");
+                    events.deathMap.put(player, events.deathMap.get(player)-1);
+
+                }
+                    else {
+                        events.deathMap.remove(player);
+                    }
+                }
+
             }
         }, 20, 20);
     }

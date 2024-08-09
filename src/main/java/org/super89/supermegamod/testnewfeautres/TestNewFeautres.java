@@ -4,6 +4,7 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,14 +26,15 @@ public final class TestNewFeautres extends JavaPlugin {
 
     private int count = 0;
     private int newCount = 0;
+    private int entityCount = 0;
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
-    private final Events events = new Events();
+    private final Events events = new Events(this);
 
 
     @Override
     public void onEnable() {
-        final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-60,0.5);
+        final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-61,0.5);
         ArmorStandUtils resArmorStand = new ArmorStandUtils(resourceLocation, ChatColor.YELLOW+"Генератор Ресуров");
 
 
@@ -61,13 +63,13 @@ public final class TestNewFeautres extends JavaPlugin {
                         setVar(player, 0);
                     }
                     if (getVar(player) < 100) {
-                        setVar(player, getVar(player) + 1);
+                        setVar(player, getVar(player) + 10);
                     }
-                    player.sendActionBar(ChatColor.AQUA+String.valueOf(getVar(player))+"/100");
+                    player.sendActionBar(ChatColor.AQUA+"Стамина: "+ getVar(player) +"/100");
                 }
 
             }
-        }, 5, 5);
+        }, 20, 20);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -99,19 +101,24 @@ public final class TestNewFeautres extends JavaPlugin {
             @Override
             public void run() {
                 if (isGameStarted) {
-                    if (resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1).isEmpty()) {
+                    for(Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1.5, 1.5, 1.5)){
+                        if(entity instanceof Player){
+                            entityCount++;
+                        }
+
+                    }
+                    if (entityCount == 0) {
                         World world = Bukkit.getWorld("world");
                         if (count < 4) {
                             assert world != null;
                             world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
                             count++;
-                            System.out.println("Dropped iron ingot"); // Debug message
                         }
                         if (count == 4) {
                             assert world != null;
                             world.dropItemNaturally(resourceLocation, new ItemStack(Material.GOLD_INGOT));
                             count = 0;
-                            System.out.println("Dropped gold ingot"); // Debug message
+
                         }
                     } else {
                         for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1)) {
@@ -120,19 +127,20 @@ public final class TestNewFeautres extends JavaPlugin {
                                 if (newCount < 4) {
                                     player.getInventory().addItem(new ItemStack(Material.IRON_INGOT));
                                     newCount++;
-                                    System.out.println("Gave iron ingot to player"); // Debug message
+
                                 }
                                 if (newCount == 4) {
                                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                                     newCount = 0;
-                                    System.out.println("Gave gold ingot to player"); // Debug message
+
                                 }
                             }
                         }
                     }
+                    entityCount = 0;
                 }
             }
-        }, 50, 50);
+        }, 30, 30);
     }
     @Override
     public void onDisable(){

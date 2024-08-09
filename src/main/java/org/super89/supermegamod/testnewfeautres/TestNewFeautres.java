@@ -6,26 +6,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
 import org.super89.supermegamod.testnewfeautres.Utils.ArmorStandUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 
 public final class TestNewFeautres extends JavaPlugin {
     private boolean isGameStarted = false;
+    private Map<Player, Integer> playerResMap = new HashMap<>();
 
-    private final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0,-59,0);
+
 
     private int count = 0;
+    private int newCount = 0;
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
     private final Events events = new Events();
@@ -33,6 +32,7 @@ public final class TestNewFeautres extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-60,0.5);
         ArmorStandUtils resArmorStand = new ArmorStandUtils(resourceLocation, ChatColor.YELLOW+"Генератор Ресуров");
 
 
@@ -99,13 +99,14 @@ public final class TestNewFeautres extends JavaPlugin {
             @Override
             public void run() {
                 if(isGameStarted){
-                    if(resArmorStand.getArmorStand().getNearbyEntities(1.5, 1.5, 1.5).isEmpty()){
+                    if(resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1).isEmpty()){
                 World world = Bukkit.getWorld("world");
                 if(count < 4){
                     assert world != null;
                     world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
 
                     count++;
+
                 }
                 if(count == 4){
                     assert world != null;
@@ -114,16 +115,15 @@ public final class TestNewFeautres extends JavaPlugin {
                 }
 
                 }else {
-                        for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1.5, 1.5, 1.5)){
-                            if(entity instanceof Player){
-                                Player player = (Player) entity;
-                                if(count < 4){
+                        for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1)){
+                            if(entity instanceof Player player){
+                                if(newCount < 4){
                                     player.getInventory().addItem(new ItemStack(Material.IRON_INGOT));
-                                    count++;
+                                    newCount++;
                                 }
-                                if(count == 4){
+                                if(newCount == 4){
                                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
-                                    count = 0;
+                                    newCount = 0;
                                 }
                             }
                         }

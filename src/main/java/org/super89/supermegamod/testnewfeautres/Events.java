@@ -80,7 +80,7 @@ public class Events implements Listener {
             con.set(smt, PersistentDataType.INTEGER, con.get(smt, PersistentDataType.INTEGER)-10);
         }
     }
-    }
-
-
 }
+
+
+

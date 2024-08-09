@@ -74,6 +74,7 @@ public final class TestNewFeautres extends JavaPlugin {
 
                     }
                     player.sendActionBar(ChatColor.AQUA+"Стамина: "+ getVar(player) +"/100");
+                    
                 }
 
             }

@@ -4,7 +4,10 @@ main: org.super89.supermegamod.testnewfeautres.TestNewFeautres
 api-version: '1.20'
 authors:
   - Super89
+depend:
+  - ProtocolLib
 commands:
   game:
     description: начать игру
     usage: Что-то сломалось)
+

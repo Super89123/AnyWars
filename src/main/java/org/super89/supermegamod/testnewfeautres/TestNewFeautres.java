@@ -63,13 +63,21 @@ public final class TestNewFeautres extends JavaPlugin {
                         setVar(player, 0);
                     }
                     if (getVar(player) < 100) {
-                        setVar(player, getVar(player) + 10);
+                        setVar(player, getVar(player) + 1);
+                    }
+
+                    if(getVar(player) <= 5 && player.isSprinting()){
+                        player.setSprinting(false);
+
+                    } else if (getVar(player) >5 && player.isSprinting()) {
+                        setVar(player, getVar(player)-1);
+
                     }
                     player.sendActionBar(ChatColor.AQUA+"Стамина: "+ getVar(player) +"/100");
                 }
 
             }
-        }, 20, 20);
+        }, 2, 2);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {

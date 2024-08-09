@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -29,6 +30,10 @@ public class Events implements Listener {
 
         Player player = event.getPlayer();
         deathMap.put(player, 5);
+        NamespacedKey smt = new NamespacedKey(plugin, "smt");
+        PersistentDataContainer con = player.getPersistentDataContainer();
+        con.set(smt, PersistentDataType.INTEGER, 100);
+
 
     }
     @EventHandler
@@ -49,11 +54,11 @@ public class Events implements Listener {
 
             PersistentDataContainer con = player.getPersistentDataContainer();
             int a = con.get(smt, PersistentDataType.INTEGER);
-            if(a == 0){
+            if(a <= 5){
                 event.setCancelled(true);
                 return;
             }
-            con.set(smt, PersistentDataType.INTEGER, a-10);
+            con.set(smt, PersistentDataType.INTEGER, Math.max(con.get(smt, PersistentDataType.INTEGER)-5, 0));
         }
     }
     @EventHandler
@@ -62,25 +67,28 @@ public class Events implements Listener {
         NamespacedKey smt = new NamespacedKey(plugin, "smt");
 
         PersistentDataContainer con = event.getPlayer().getPersistentDataContainer();
-        if(con.get(smt, PersistentDataType.INTEGER) == 0){
+        if(con.get(smt, PersistentDataType.INTEGER) <= 5){
             event.setCancelled(true);
+
         }
         else {
-            con.set(smt, PersistentDataType.INTEGER, con.get(smt, PersistentDataType.INTEGER)-10);
+            con.set(smt, PersistentDataType.INTEGER, Math.max(con.get(smt, PersistentDataType.INTEGER)-5, 0));
         }
     }
     @EventHandler
     public void preattack(PrePlayerAttackEntityEvent event){
         NamespacedKey smt = new NamespacedKey(plugin, "smt");
         PersistentDataContainer con = event.getPlayer().getPersistentDataContainer();
-        if(con.get(smt, PersistentDataType.INTEGER) == 0){
+        if(con.get(smt, PersistentDataType.INTEGER) <= 5){
             event.setCancelled(true);
         }
         else {
-            con.set(smt, PersistentDataType.INTEGER, con.get(smt, PersistentDataType.INTEGER)-10);
+            con.set(smt, PersistentDataType.INTEGER, Math.max(con.get(smt, PersistentDataType.INTEGER)-5, 0));
         }
     }
+
 }
+
 
 
 

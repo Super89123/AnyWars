@@ -67,7 +67,7 @@ public final class TestNewFeautres extends JavaPlugin {
                 }
 
             }
-        }, 20, 20);
+        }, 5, 5);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -98,40 +98,39 @@ public final class TestNewFeautres extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                if(isGameStarted){
-                    if(resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1).isEmpty()){
-                World world = Bukkit.getWorld("world");
-                if(count < 4){
-                    assert world != null;
-                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
-
-                    count++;
-
-                }
-                if(count == 4){
-                    assert world != null;
-                    world.dropItemNaturally(resourceLocation, new ItemStack(Material.GOLD_INGOT));
-                    count = 0;
-                }
-
-                }else {
-                        for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1)){
-                            if(entity instanceof Player player){
-                                if(newCount < 4){
+                if (isGameStarted) {
+                    if (resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1).isEmpty()) {
+                        World world = Bukkit.getWorld("world");
+                        if (count < 4) {
+                            assert world != null;
+                            world.dropItemNaturally(resourceLocation, new ItemStack(Material.IRON_INGOT));
+                            count++;
+                            System.out.println("Dropped iron ingot"); // Debug message
+                        }
+                        if (count == 4) {
+                            assert world != null;
+                            world.dropItemNaturally(resourceLocation, new ItemStack(Material.GOLD_INGOT));
+                            count = 0;
+                            System.out.println("Dropped gold ingot"); // Debug message
+                        }
+                    } else {
+                        for (Entity entity : resArmorStand.getArmorStand().getNearbyEntities(1, 1, 1)) {
+                            if (entity instanceof Player player) {
+                                System.out.println("Player detected near armor stand: " + player.getName()); // Debug message
+                                if (newCount < 4) {
                                     player.getInventory().addItem(new ItemStack(Material.IRON_INGOT));
                                     newCount++;
+                                    System.out.println("Gave iron ingot to player"); // Debug message
                                 }
-                                if(newCount == 4){
+                                if (newCount == 4) {
                                     player.getInventory().addItem(new ItemStack(Material.GOLD_INGOT));
                                     newCount = 0;
+                                    System.out.println("Gave gold ingot to player"); // Debug message
                                 }
                             }
                         }
                     }
-
                 }
-
-
             }
         }, 50, 50);
     }

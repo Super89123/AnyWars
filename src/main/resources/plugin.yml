@@ -5,7 +5,7 @@ api-version: '1.20'
 authors:
   - Super89
 depend:
-  - ProtocolLib
+  - Citizens
 commands:
   game:
     description: начать игру

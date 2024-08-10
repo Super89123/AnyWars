@@ -52,6 +52,8 @@ public final class TestNewFeautres extends JavaPlugin {
         for(World world : Bukkit.getWorlds()){
 
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
         }
 
@@ -70,7 +72,7 @@ public final class TestNewFeautres extends JavaPlugin {
                         player.setSprinting(false);
 
                     } else if (getVar(player) >5 && player.isSprinting()) {
-                        setVar(player, getVar(player)-1);
+                        setVar(player, getVar(player)-3);
 
                     }
                     player.sendActionBar(ChatColor.AQUA+"Стамина: "+ getVar(player) +"/100");
@@ -78,7 +80,7 @@ public final class TestNewFeautres extends JavaPlugin {
                 }
 
             }
-        }, 2, 2);
+        }, 4, 4);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {

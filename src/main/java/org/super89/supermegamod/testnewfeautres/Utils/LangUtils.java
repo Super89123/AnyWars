@@ -29,15 +29,17 @@ public class LangUtils {
         this.config = YamlConfiguration.loadConfiguration(file);
         if (filename.equals("ru.yml")) {
             config.set("respwanend", "Возврождение");
-            config.set("generator", "Генератор ресурсов");
+            config.set("generator", "Пожалуйста, проверьте что Citizens работает корректно");
         } else if (filename.equals("en.yml")) {
             config.set("respwanend", "You are Alive");
             config.set("generator", "generator");
+            config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
 
         }
         else {
             config.set("respwanend", "Возврождение");
             config.set("generator", "Генератор ресурсов");
+            config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
 
         }
     }

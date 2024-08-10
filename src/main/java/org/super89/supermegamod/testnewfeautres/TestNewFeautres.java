@@ -1,5 +1,6 @@
 package org.super89.supermegamod.testnewfeautres;
 
+import net.citizensnpcs.api.event.CitizensEnableEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -9,6 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -23,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public final class TestNewFeautres extends JavaPlugin {
+public final class TestNewFeautres extends JavaPlugin implements Listener {
     private boolean isGameStarted = false;
     private Map<Player, Integer> playerResMap = new HashMap<>();
 
@@ -37,6 +40,7 @@ public final class TestNewFeautres extends JavaPlugin {
     private final Events events = new Events(this);
     private LangUtils lang;
     private final File configFile = new File(getDataFolder(), "config.yml");
+    private boolean isCitizens = false;
 
 
     YamlConfiguration config = new YamlConfiguration();
@@ -61,6 +65,9 @@ public final class TestNewFeautres extends JavaPlugin {
         }
         else {
             lang= new LangUtils(this, "en.yml");
+        }
+        if(!isCitizens){
+            getServer().getLogger().severe(String.valueOf(lang.getConfig().get("nocitizens")));
         }
 
         final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-61,0.5);
@@ -202,6 +209,10 @@ public final class TestNewFeautres extends JavaPlugin {
     }
     public void setGameStarted(boolean t){
         isGameStarted = t;
+    }
+    @EventHandler
+    public void citizens(CitizensEnableEvent event){
+        isCitizens = true;
     }
 
 

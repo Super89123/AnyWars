@@ -4,6 +4,8 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,8 +16,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import org.super89.supermegamod.testnewfeautres.Utils.ArmorStandUtils;
+import org.super89.supermegamod.testnewfeautres.Utils.LangUtils;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public final class TestNewFeautres extends JavaPlugin {
@@ -30,10 +35,34 @@ public final class TestNewFeautres extends JavaPlugin {
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
     private final Events events = new Events(this);
+    private LangUtils lang;
+    private final File configFile = new File(getDataFolder(), "config.yml");
+
+
+    YamlConfiguration config = new YamlConfiguration();
+
 
 
     @Override
     public void onEnable() {
+        try {
+            config.load(configFile);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidConfigurationException e) {
+            getServer().getLogger().severe("Ошибка При загрузки конфигурации! Пожалуйста свяжитесь с нами в офффицальном дискорд сервере");
+            getServer().getLogger().severe("https://discord.gg/gWcX5kAHhH");
+            throw new RuntimeException(e);
+
+        }
+        if(config.get("lang").equals("ru")){
+            lang = new LangUtils(this, "ru.yml");
+        }
+        else {
+            lang= new LangUtils(this, "en.yml");
+        }
+
         final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-61,0.5);
         ArmorStandUtils resArmorStand = new ArmorStandUtils(resourceLocation, ChatColor.YELLOW+"Генератор Ресуров");
 

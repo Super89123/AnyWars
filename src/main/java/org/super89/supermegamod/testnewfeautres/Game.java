@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Game implements CommandExecutor {
     private final TestNewFeautres plugin;
-    private boolean isgamestarted;
+    private final boolean isgamestarted;
 
     public Game(TestNewFeautres plugin) {
         this.plugin = plugin;

@@ -39,7 +39,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
     private final Events events = new Events(this);
     private LangUtils lang;
-    private final File configFile = new File(getDataFolder(), "config.yml");
+
     private boolean isCitizens = false;
 
 
@@ -49,6 +49,14 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        final File configFile = new File(getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
+            try {
+                configFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             config.load(configFile);
 
@@ -96,6 +104,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
+                if(isGameStarted){
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (getVar(player) == 0) {
                         setVar(player, 0);
@@ -113,6 +122,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
                     }
                     player.sendActionBar(ChatColor.AQUA+"Стамина: "+ getVar(player) +"/100");
                     
+                }
                 }
 
             }

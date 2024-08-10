@@ -42,6 +42,11 @@ public class LangUtils {
             config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
 
         }
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public YamlConfiguration getConfig() {

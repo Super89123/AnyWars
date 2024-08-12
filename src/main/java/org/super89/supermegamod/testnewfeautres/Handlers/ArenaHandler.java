@@ -1,4 +1,4 @@
-package org.super89.supermegamod.testnewfeautres.Utils;
+package org.super89.supermegamod.testnewfeautres.Handlers;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -7,7 +7,7 @@ import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
 import java.io.File;
 import java.io.IOException;
 
-public class ArenaUtils {
+public class ArenaHandler {
     private final TestNewFeautres plugin;
     private final File templateFile;
     private final YamlConfiguration templateConfig;
@@ -17,7 +17,7 @@ public class ArenaUtils {
     private Location spawnLocation;
     private int minSize;
 
-    public ArenaUtils(TestNewFeautres plugin, String fileName, int PlayersCount, int teamCount, Location spawnLocation, int minSize) {
+    public ArenaHandler(TestNewFeautres plugin, String fileName, int PlayersCount, int teamCount, Location spawnLocation, int minSize) {
         this.plugin = plugin;
         this.arenaDir = new File(plugin.getDataFolder(), "arenas");
         if(!arenaDir.exists()){

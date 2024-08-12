@@ -1,4 +1,4 @@
-package org.super89.supermegamod.testnewfeautres.Utils;
+package org.super89.supermegamod.testnewfeautres.Handlers;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
@@ -6,13 +6,13 @@ import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
 import java.io.File;
 import java.io.IOException;
 
-public class LangUtils {
+public class LangHandler {
     private final TestNewFeautres plugin;
     private final File langFolder;
     private final File file;
     private final YamlConfiguration config;
 
-    public LangUtils(TestNewFeautres plugin, String filename) {
+    public LangHandler(TestNewFeautres plugin, String filename) {
         this.plugin = plugin;
         this.langFolder = new File(this.plugin.getDataFolder(), "lang");
         if (!langFolder.exists()) {

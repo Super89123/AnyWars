@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import org.super89.supermegamod.testnewfeautres.Utils.ArmorStandUtils;
-import org.super89.supermegamod.testnewfeautres.Utils.LangUtils;
+import org.super89.supermegamod.testnewfeautres.Handlers.LangHandler;
 
 
 import java.io.File;
@@ -38,7 +37,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
     private final Events events = new Events(this);
-    private LangUtils lang;
+    private LangHandler lang;
 
     private boolean isCitizens = false;
 
@@ -69,10 +68,10 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
 
         }
         if(config.get("lang").equals("ru")){
-            lang = new LangUtils(this, "ru.yml");
+            lang = new LangHandler(this, "ru.yml");
         }
         else {
-            lang= new LangUtils(this, "en.yml");
+            lang= new LangHandler(this, "en.yml");
         }
         if(!isCitizens){
             getServer().getLogger().severe(String.valueOf(lang.getConfig().get("nocitizens")));

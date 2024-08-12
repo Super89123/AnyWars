@@ -202,6 +202,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     @Override
     public void onDisable(){
         isGameStarted = false;
+
     }
 
     public int getVar(Player player) {

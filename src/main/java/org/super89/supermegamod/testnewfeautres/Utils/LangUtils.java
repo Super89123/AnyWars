@@ -20,33 +20,37 @@ public class LangUtils {
         }
         this.file = new File(langFolder, filename);
         if (!file.exists()) {
+            this.config = YamlConfiguration.loadConfiguration(file);
+            if (filename.equals("ru.yml")) {
+                config.set("respwanend", "Возврождение");
+                config.set("generator", "Пожалуйста, проверьте что Citizens работает корректно");
+            } else if (filename.equals("en.yml")) {
+                config.set("respwanend", "You are Alive");
+                config.set("generator", "generator");
+                config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
+
+            }
+            else {
+                config.set("respwanend", "Возврождение");
+                config.set("generator", "Генератор ресурсов");
+                config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
+
+            }
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             try {
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        this.config = YamlConfiguration.loadConfiguration(file);
-        if (filename.equals("ru.yml")) {
-            config.set("respwanend", "Возврождение");
-            config.set("generator", "Пожалуйста, проверьте что Citizens работает корректно");
-        } else if (filename.equals("en.yml")) {
-            config.set("respwanend", "You are Alive");
-            config.set("generator", "generator");
-            config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
-
-        }
         else {
-            config.set("respwanend", "Возврождение");
-            config.set("generator", "Генератор ресурсов");
-            config.set("nocitizens", "Please, Check if Citizens Plugin works correctly");
+            this.config = YamlConfiguration.loadConfiguration(file);
+        }
 
-        }
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public YamlConfiguration getConfig() {

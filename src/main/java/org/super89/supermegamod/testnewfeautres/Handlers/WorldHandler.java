@@ -7,7 +7,7 @@ import org.super89.supermegamod.testnewfeautres.Generators.VoidGenerator;
 
 public class WorldHandler {
     private final String world_name;
-    private final World generatedWorld;
+    private World generatedWorld;
     public WorldHandler(String world_name){
         this.world_name = world_name;
 
@@ -16,10 +16,14 @@ public class WorldHandler {
         worldCreator.environment(World.Environment.NORMAL);
         worldCreator.generateStructures(false);
         worldCreator.generator(new VoidGenerator());
+        if(Bukkit.getWorld(world_name) == null) {
 
 
-        this.generatedWorld = Bukkit.createWorld(worldCreator);
-
+            this.generatedWorld = Bukkit.createWorld(worldCreator);
+        }
+        else {
+            this.generatedWorld = Bukkit.getWorld(world_name);
+        }
         // TODO
     }
     public String getWorldName(){

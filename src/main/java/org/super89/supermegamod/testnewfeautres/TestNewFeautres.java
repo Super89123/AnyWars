@@ -121,7 +121,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
         }
-        Objects.requireNonNull(Bukkit.getPluginCommand("anywars")).setExecutor(new AnyWarsCommand());
+        Objects.requireNonNull(Bukkit.getPluginCommand("anywars")).setExecutor(new AnyWarsCommand(this));
 
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -248,11 +248,9 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     public String getArenaType(){
         return String.valueOf(config.get("arena_type"));
     }
-    @EventHandler
-    public void citizens(CitizensEnableEvent event){
-        isCitizens = true;
+    public List<YamlConfiguration> getArenas(){
+        return arenas;
     }
-
 
 
 

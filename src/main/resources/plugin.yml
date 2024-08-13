@@ -15,4 +15,5 @@ commands:
     aliases:
       - aw
     description: Основная команда.
+    usage: /<command> create name max-size team-count min-count
 

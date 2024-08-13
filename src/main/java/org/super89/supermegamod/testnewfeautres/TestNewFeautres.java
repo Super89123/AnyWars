@@ -17,6 +17,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import org.super89.supermegamod.testnewfeautres.Commands.AnyWarsCommand;
+import org.super89.supermegamod.testnewfeautres.Commands.Game;
+import org.super89.supermegamod.testnewfeautres.Events.BlockEvents;
+import org.super89.supermegamod.testnewfeautres.Events.PlayerEvents;
 import org.super89.supermegamod.testnewfeautres.Utils.ArmorStandUtils;
 import org.super89.supermegamod.testnewfeautres.Handlers.LangHandler;
 
@@ -36,13 +40,15 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     private int entityCount = 0;
 
     private final NamespacedKey smt = new NamespacedKey(this, "smt");
-    private final Events events = new Events(this);
+    private final BlockEvents blockEvents = new BlockEvents(this);
+    private final PlayerEvents playerEvents = new PlayerEvents(this);
     private LangHandler lang;
+    private List<YamlConfiguration> arenas;
 
     private boolean isCitizens = false;
 
 
-    YamlConfiguration config = new YamlConfiguration();
+    private YamlConfiguration config = new YamlConfiguration();
 
 
 
@@ -50,8 +56,12 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     public void onEnable() {
         final File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
+            configFile.getParentFile().mkdirs();
             try {
                 configFile.createNewFile();
+                config.set("lang", "en");
+                config.set("arena_type", "world");
+                config.save(configFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,9 +89,21 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
 
         final Location resourceLocation = new Location(Bukkit.getWorld("world"), 0.5,-61,0.5);
         ArmorStandUtils resArmorStand = new ArmorStandUtils(resourceLocation, ChatColor.YELLOW+"Генератор Ресуров");
+        final File arenaDir = new File(getDataFolder(), "arenas");
+        if(!arenaDir.exists()){
+            arenaDir.mkdirs();
+        }
+        for(File file: arenaDir.listFiles()){
+            if(file.isFile()){
+                arenas.add(YamlConfiguration.loadConfiguration(file));
+            }
 
 
-        Bukkit.getPluginManager().registerEvents(events, this);
+
+        }
+
+        Bukkit.getPluginManager().registerEvents(playerEvents, this);
+        Bukkit.getPluginManager().registerEvents(blockEvents, this);
         Objects.requireNonNull(Bukkit.getPluginCommand("game")).setExecutor(new Game(this));
         List<String> tabgame = Arrays.asList("start", "stop");
         Objects.requireNonNull(Bukkit.getPluginCommand("game")).setTabCompleter(new TabCompleter() {
@@ -99,6 +121,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
         }
+        Objects.requireNonNull(Bukkit.getPluginCommand("anywars")).setExecutor(new AnyWarsCommand());
 
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -130,15 +153,15 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                for(Player player : events.deathMap.keySet()){
-                    if(events.deathMap.get(player) >0){
-                    player.sendTitle(ChatColor.YELLOW+"Возрождение через: " + ChatColor.RED + events.deathMap.get(player)+" секунд." , "");
-                    events.deathMap.put(player, events.deathMap.get(player)-1);
+                for(Player player : playerEvents.deathMap.keySet()){
+                    if(playerEvents.deathMap.get(player) >0){
+                    player.sendTitle(ChatColor.YELLOW+"Возрождение через: " + ChatColor.RED + playerEvents.deathMap.get(player)+" секунд." , "");
+                    playerEvents.deathMap.put(player, playerEvents.deathMap.get(player)-1);
 
 
                     }
                     else {
-                        events.deathMap.remove(player);
+                        playerEvents.deathMap.remove(player);
                         player.sendTitle(ChatColor.YELLOW + "Вы возрождены!", "");
                         player.setGameMode(GameMode.ADVENTURE);
                         if(player.getRespawnLocation() != null) {
@@ -198,6 +221,7 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
                 }
             }
         }, 30, 30);
+
     }
     @Override
     public void onDisable(){
@@ -221,10 +245,14 @@ public final class TestNewFeautres extends JavaPlugin implements Listener {
     public void setGameStarted(boolean t){
         isGameStarted = t;
     }
+    public String getArenaType(){
+        return String.valueOf(config.get("arena_type"));
+    }
     @EventHandler
     public void citizens(CitizensEnableEvent event){
         isCitizens = true;
     }
+
 
 
 

@@ -11,4 +11,8 @@ commands:
   game:
     description: начать игру
     usage: Что-то сломалось)
+  anywars:
+    aliases:
+      - aw
+    description: Основная команда.
 

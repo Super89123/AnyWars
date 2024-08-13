@@ -1,4 +1,4 @@
-package org.super89.supermegamod.testnewfeautres;
+package org.super89.supermegamod.testnewfeautres.Events;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
@@ -9,25 +9,23 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Events implements Listener {
+public class PlayerEvents implements Listener {
     public Map<Player, Integer> deathMap = new HashMap<>();
     private final TestNewFeautres plugin;
     private final boolean isGameStarted;
     private Map<Block, Location> blockMap = new HashMap<>();
-    public Events(TestNewFeautres plugin){
+    public PlayerEvents(TestNewFeautres plugin){
         this.plugin = plugin;
         this.isGameStarted = plugin.getisGameStarted();
     }
@@ -93,24 +91,4 @@ public class Events implements Listener {
             con.set(smt, PersistentDataType.INTEGER, Math.max(con.get(smt, PersistentDataType.INTEGER)-5, 0));
         }
     }
-    @EventHandler
-    public void placeEvent(BlockPlaceEvent event){
-        if(isGameStarted){
-            blockMap.put(event.getBlockPlaced(), event.getBlockPlaced().getLocation());
-        }
-
-
-    }
-    @EventHandler
-    public void breakEvent(BlockBreakEvent event){
-        if(isGameStarted && blockMap.get(event.getBlock()) != null){
-            blockMap.remove(event.getBlock());
-            event.setCancelled(true);
-        }
-    }
-
 }
-
-
-
-

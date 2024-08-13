@@ -1,9 +1,10 @@
 package org.super89.supermegamod.testnewfeautres.Handlers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.super89.supermegamod.testnewfeautres.Generators.VoidGenerator;
+import org.super89.supermegamod.testnewfeautres.WorldGenerators.VoidGenerator;
 
 public class WorldHandler {
     private final String world_name;
@@ -20,11 +21,12 @@ public class WorldHandler {
 
 
             this.generatedWorld = Bukkit.createWorld(worldCreator);
+
         }
         else {
             this.generatedWorld = Bukkit.getWorld(world_name);
         }
-        // TODO
+
     }
     public String getWorldName(){
         return world_name;
@@ -32,5 +34,8 @@ public class WorldHandler {
 
     public World getGeneratedWorld() {
         return generatedWorld;
+    }
+    public void setSpawnInWorld(Location location){
+        generatedWorld.setSpawnLocation(location);
     }
 }

@@ -1,4 +1,4 @@
-package org.super89.supermegamod.testnewfeautres.Generators;
+package org.super89.supermegamod.testnewfeautres.WorldGenerators;
 
 import java.util.Collections;
 import java.util.List;

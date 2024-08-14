@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -11,8 +12,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
@@ -91,4 +96,31 @@ public class PlayerEvents implements Listener {
             con.set(smt, PersistentDataType.INTEGER, Math.max(con.get(smt, PersistentDataType.INTEGER)-5, 0));
         }
     }
+    @EventHandler
+    public void dropEvent(PlayerDropItemEvent event){
+        ItemStack itemStack = event.getItemDrop().getItemStack();
+        ItemMeta meta = itemStack.getItemMeta();
+        NamespacedKey canDrop = new NamespacedKey(plugin, "canDrop");
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if(container.has(canDrop)){
+            if(Boolean.TRUE.equals(container.get(canDrop, PersistentDataType.BOOLEAN))){
+                event.setCancelled(true);
+            }
+        }
+    }
+    @EventHandler
+    public void interactcancelevent(InventoryClickEvent event){
+        if(event.getCurrentItem().getType() != Material.AIR){
+            ItemStack itemStack = event.getCurrentItem();
+            ItemMeta meta = itemStack.getItemMeta();
+            NamespacedKey canDrop = new NamespacedKey(plugin, "canDrop");
+            PersistentDataContainer container = meta.getPersistentDataContainer();
+            if(container.has(canDrop)){
+                if(Boolean.TRUE.equals(container.get(canDrop, PersistentDataType.BOOLEAN))){
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
 }

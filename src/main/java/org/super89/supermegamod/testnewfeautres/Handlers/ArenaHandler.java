@@ -16,6 +16,7 @@ public class ArenaHandler {
     private int teamCount;
     private Location spawnLocation;
     private int minSize;
+    private int playersInTeam;
 
     public ArenaHandler(TestNewFeautres plugin, String fileName, int PlayersCount, int teamCount, Location spawnLocation, int minSize) {
         this.plugin = plugin;

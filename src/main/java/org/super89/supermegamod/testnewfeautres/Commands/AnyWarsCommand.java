@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.super89.supermegamod.testnewfeautres.Handlers.ArenaHandler;
 import org.super89.supermegamod.testnewfeautres.Handlers.WorldHandler;
 import org.super89.supermegamod.testnewfeautres.TestNewFeautres;
+import org.super89.supermegamod.testnewfeautres.Utils.MathUtils;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class AnyWarsCommand implements CommandExecutor {
         else {
             Player player = (Player) commandSender;
             if(args[0].equals("create")){
-                if(!(isNumeric(args[2]) || !(isNumeric(args[3])) || !(isNumeric(args[4])))){
+                if(!(MathUtils.isNumeric(args[2]) || !(MathUtils.isNumeric(args[3])) || !(MathUtils.isNumeric(args[4])))){
                     player.sendMessage(ChatColor.RED+"Вы ввели неверные целые числа!");
                     return false;
 
@@ -58,12 +59,5 @@ public class AnyWarsCommand implements CommandExecutor {
 
         return true;
     }
-    private static boolean isNumeric(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch(NumberFormatException e){
-            return false;
-        }
-    }
+
 }

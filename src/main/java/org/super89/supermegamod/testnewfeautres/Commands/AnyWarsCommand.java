@@ -68,8 +68,11 @@ public class AnyWarsCommand implements CommandExecutor {
                     player.getInventory().clear();
                     player.getInventory().addItem(itemUtils.createUnThrowableItem(Material.COMPASS, ChatColor.YELLOW+"Выбор команды", 1));
                     for(Player player1 : world.getPlayers()){
-                        player1.sendMessage(ChatColor.GRAY+String.valueOf(world.getPlayers().size())+"/"+ arenaHandler.getSize() +ChatColor.WHITE + player1.getName() + " зашел в игру.");
+                        player1.sendMessage(ChatColor.GRAY+String.valueOf(world.getPlayers().size())+"/"+ arenaHandler.getSize() +" "+ChatColor.WHITE + player1.getName() + " зашел в игру.");
                     }
+                }
+                else {
+                    player.sendMessage(ChatColor.RED+"Данной арены не существует!");
                 }
 
             }

@@ -1,9 +1,6 @@
 package org.super89.supermegamod.testnewfeautres.Handlers;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.super89.supermegamod.testnewfeautres.WorldGenerators.VoidGenerator;
 
 public class WorldHandler {
@@ -21,6 +18,10 @@ public class WorldHandler {
 
 
             this.generatedWorld = Bukkit.createWorld(worldCreator);
+            assert this.generatedWorld != null;
+            this.generatedWorld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            this.generatedWorld.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+            this.generatedWorld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
         }
         else {

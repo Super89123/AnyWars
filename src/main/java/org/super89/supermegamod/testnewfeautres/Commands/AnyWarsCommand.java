@@ -51,6 +51,7 @@ public class AnyWarsCommand implements CommandExecutor {
                 location.setY(location.getY()+1);
 
                 arenaHandler = new ArenaHandler(plugin, args[1],  Integer.parseInt(args[2]) ,Integer.parseInt(args[3]), location, Integer.parseInt(args[4]));
+                player.teleport(location);
 
 
 

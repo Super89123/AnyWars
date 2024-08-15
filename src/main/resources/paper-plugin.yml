@@ -1,0 +1,4 @@
+name: AnyWars
+version: '1.0-SNAPSHOT'
+main: org.relaxertime.anyWars.AnyWars
+api-version: '1.20'

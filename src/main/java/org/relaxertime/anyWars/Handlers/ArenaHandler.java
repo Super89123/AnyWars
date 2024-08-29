@@ -3,6 +3,7 @@ package org.relaxertime.anyWars.Handlers;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.relaxertime.anyWars.AnyWars;
+import org.relaxertime.anyWars.Utils.LocationUtils;
 
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class ArenaHandler {
             templateConfig.set("max-players-count", PlayersCount);
             templateConfig.set("min-players-count", minSize);
             templateConfig.set("teams-count", teamCount);
-            templateConfig.set("location", spawnLocation);
+            templateConfig.set("location", LocationUtils.locationToString(spawnLocation));
 
             try {
                 templateConfig.save(templateFile);
@@ -50,7 +51,7 @@ public class ArenaHandler {
             }
         }
         else {
-            this.spawnLocation = (Location) templateConfig.get("location");
+            this.spawnLocation = LocationUtils.locationFromString(String.valueOf(templateConfig.get("location")));
             this.size = (int) templateConfig.get("max-players-count");
             this.minSize = (int) templateConfig.get("min-players-count");
             this.teamCount = (int) templateConfig.get("teams-count");
@@ -66,16 +67,19 @@ public class ArenaHandler {
             arenaDir.mkdirs();
         }
         this.templateFile = new File(arenaDir, name+".arena");
+        this.templateConfig = YamlConfiguration.loadConfiguration(templateFile);
         if(!(templateFile.exists())){
             isExist = false;
         }
+        else {
 
-        this.templateConfig = YamlConfiguration.loadConfiguration(templateFile);
-        this.spawnLocation = (Location) templateConfig.get("location");
-        this.size = (int) templateConfig.get("max-players-count");
-        this.minSize = (int) templateConfig.get("min-players-count");
-        this.teamCount = (int) templateConfig.get("teams-count");
 
+            this.spawnLocation = LocationUtils.locationFromString(String.valueOf(templateConfig.get("location")));
+            this.size = (int) templateConfig.get("max-players-count");
+            this.minSize = (int) templateConfig.get("min-players-count");
+            this.teamCount = (int) templateConfig.get("teams-count");
+            isExist = true;
+        }
 
 
     }
@@ -105,4 +109,7 @@ public class ArenaHandler {
         return name;
     }
 
+    public void setSpawnLocation(Location spawnLocation) {
+        this.spawnLocation = spawnLocation;
+    }
 }

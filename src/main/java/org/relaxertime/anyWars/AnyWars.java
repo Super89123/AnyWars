@@ -92,14 +92,8 @@ public final class AnyWars extends JavaPlugin implements Listener {
         if(!arenaDir.exists()){
             arenaDir.mkdirs();
         }
-        for(File file: arenaDir.listFiles()){
-            if(file.isFile()){
-                arenas.add(YamlConfiguration.loadConfiguration(file));
-            }
 
 
-
-        }
 
         Bukkit.getPluginManager().registerEvents(playerEvents, this);
         Bukkit.getPluginManager().registerEvents(blockEvents, this);

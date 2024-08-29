@@ -61,6 +61,10 @@ public class AnyWarsCommand implements CommandExecutor {
         }
         else if(args[0].equals("join") && args.length == 2){
             arenaHandler = new ArenaHandler(plugin, args[1]);
+            worldHandler = new WorldHandler(args[1]);
+            Location location = arenaHandler.getSpawnLocation();
+            location.setWorld(worldHandler.getGeneratedWorld());
+            arenaHandler.setSpawnLocation(location);
             itemUtils = new ItemUtils(plugin);
             World world = arenaHandler.getSpawnLocation().getWorld();
             if(arenaHandler.isExist()){

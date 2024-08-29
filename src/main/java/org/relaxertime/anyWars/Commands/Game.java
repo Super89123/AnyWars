@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.relaxertime.anyWars.AnyWars;
+import org.relaxertime.anyWars.Handlers.ColorHandler;
 
 
 public class Game implements CommandExecutor {
@@ -27,6 +28,7 @@ public class Game implements CommandExecutor {
 
             }
             Player player = (Player) commandSender;
+            final ColorHandler colorHandler = new ColorHandler(235, 164, 164);
             if(args.length < 1){
                 player.sendMessage("Используйте /game start/stop");
 
@@ -40,6 +42,8 @@ public class Game implements CommandExecutor {
                 }
                 plugin.setGameStarted(true);
                 player.sendMessage(ChatColor.RED + "Игра началась!");
+                colorHandler.setColorToPlayer(player);
+                colorHandler.giveColoredLeatherArmor(player);
                 return true;
             }
             if(args[0].equals("stop")) {
